@@ -12,7 +12,9 @@ module.exports = class Grass extends LivingCreature {
     if (this.roundCount >= 6) {
       let emptyFields = this.findFields(0);
       if (emptyFields.length > 0) {
-        let newPos = random(emptyFields); // [x,y]
+        // let newPos = random(emptyFields); // [x,y]
+        let randIndex = Math.floor(Math.random() * emptyFields.length);
+        let newPos = emptyFields[randIndex];
         let newX = newPos[0];
         let newY = newPos[1];
         grassArr.push(new Grass(newX, newY));
