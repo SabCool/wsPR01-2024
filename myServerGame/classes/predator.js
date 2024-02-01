@@ -37,7 +37,9 @@ module.exports = class Predator extends LivingCreature {
   eat() {
     let fields = this.findFields(2);
     if (fields.length > 0) {
-      let pos = random(fields);
+      // let pos = random(fields);
+      let randIndex = Math.floor(Math.random() * fields.length);
+      let pos = fields[randIndex];
       this.updateGameAndPos(pos[0], pos[1]);
       utils.removeFromList(this, grazerArr); // Grasfresser löschen
 
@@ -60,7 +62,9 @@ module.exports = class Predator extends LivingCreature {
   move() {
     let emptyFields = this.findFields(0);
     if (emptyFields.length > 0) {
-      let pos = random(emptyFields);
+      // let pos = random(emptyFields);
+      let randIndex = Math.floor(Math.random() * emptyFields.length);
+      let pos = emptyFields[randIndex];
       this.updateGameAndPos(pos[0], pos[1]);
     }
   }
@@ -74,8 +78,9 @@ module.exports = class Predator extends LivingCreature {
     if (this.eatCount >= 5) {
       let emptyFields = this.findFields(0);
       if (emptyFields.length > 0) {
-        let pos = random(emptyFields);
-
+        // let pos = random(emptyFields);
+        let randIndex = Math.floor(Math.random() * emptyFields.length);
+        let pos = emptyFields[randIndex];
         predatorArr.push(new Predator(pos[0], pos[1]));
         matrix[pos[1]][pos[0]] = this.colorValue;
       }

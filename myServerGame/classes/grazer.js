@@ -37,7 +37,9 @@ module.exports = class Grazer extends LivingCreature {
   eat() {
     let fields = this.findFields(1);
     if (fields.length > 0) {
-      let pos = random(fields);
+      // let pos = random(fields);
+      let randIndex = Math.floor(Math.random() * fields.length);
+      let pos = fields[randIndex];
       this.updateGameAndPos(pos[0], pos[1]);
       utils.removeFromList(this, grassArr); // Gras löschen
 
@@ -59,7 +61,9 @@ module.exports = class Grazer extends LivingCreature {
   move() {
     let emptyFields = this.findFields(0);
     if (emptyFields.length > 0) {
-      let pos = random(emptyFields);
+      // let pos = random(emptyFields);
+      let randIndex = Math.floor(Math.random() * emptyFields.length);
+      let pos = emptyFields[randIndex];
       this.updateGameAndPos(pos[0], pos[1]);
     }
   }

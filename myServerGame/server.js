@@ -4,20 +4,57 @@ const Predator = require("./classes/predator.js");
 //const utils = require("./classes/utils.js");
 
 let interValID;
+let gameStarted = false;
 
 /////////////////////////////////// Server Setup
 const express = require("express");
 const app = express();
 
-app.listen(3000, function () {
+let server = require('http').Server(app);
+let io = require('socket.io')(server);
+
+app.use(express.static('./client'));
+app.get("/", function (req, res) {
+  res.redirect('client.html');
+})
+
+let clients = [];
+server.listen(3000, function () {
   console.log("Der Server läuft auf port 3000");
-  // spiel startet
-  initGame();
-  console.log(matrix);
-  // spielschleife starten -
-  interValID = setInterval(function () {
-    updateGame();
-  }, 1000);
+
+  io.on("connection", function (socket) {
+    console.log("ws-connection client", socket.id);
+    clients.push(socket.id);
+
+    if (clients.length == 1 && gameStarted == false) {
+        // Spielstart
+        initGame();
+        console.log(matrix);
+        // spielschleife starten -
+        interValID = setInterval(function () {
+          updateGame();
+        }, 1000);
+        gameStarted = true;
+    }
+
+    socket.on("disconnect", function (reason) {
+      console.log("client was disconnected: reason - ", reason);
+      const foundIndex = clients.findIndex(id => id == socket.id);
+      if(foundIndex >= 0){
+        clients.splice(foundIndex, 1);
+      }
+      if(clients.length == 0){
+        clearInterval(interValID);
+        gameStarted = false;
+        console.log("no client connected - game was stopped")
+      }
+    })
+
+
+  })
+
+
+
 
 });
 
@@ -60,7 +97,7 @@ function addMoreCreatures() {
 
 function initGame() {
 
-  matrix =getRandMatrix(50,50);
+  matrix = getRandMatrix(50, 50);
   addMoreCreatures();
 
   // createCanvas(matrix[0].length * side + 1, matrix.length * side + 1);
@@ -107,5 +144,6 @@ function updateGame() {
 
   // }
 
-  console.log(matrix);
+  // console.log(matrix);
+  
 }
